@@ -3,9 +3,14 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
-
+import 'vant/lib/index.css'
+import {Button,Tabbar,TabbarItem,Tag,Field} from 'vant';
+Vue.use(Tabbar);
+Vue.use(Button);
+Vue.use(TabbarItem);
+Vue.use(Tag)
+Vue.use(Field)
 Vue.config.productionTip = false
-
 new Vue({
   router,
   store,
