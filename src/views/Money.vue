@@ -18,14 +18,15 @@
     import Type from '@/components/Money/Type.vue';
     import Note from '@/components/Money/Note.vue';
     import Tags from '@/components/Money/Tags.vue';
-    import model from '@/model';
-
+    import recordListModel from '@/models/recordListModel';
+    import tagListModel from '@/models/tagListModel';
+    const recordList = recordListModel.fetch()
+    const tagList = tagListModel.fetch()
     @Component({
         components: {Tags, Note, Type, NumberPad, Layout}
     })
     export default class Money extends Vue {
-        tags = ['吃饭', '可乐', '游戏', '坐车'];
-        recordList = model.fetch()
+        tags = tagList;
         record: RecordItem = {tags:[],notes:'',type:'-',amount:0}
         onUpdateTags(value: string[]) {
             this.record.tags = value
@@ -35,13 +36,13 @@
             this.record.notes = value
         }
         saveRecord(){
-            const record2: RecordItem = model.clone(this.record)
+            const record2: RecordItem = recordListModel.clone(this.record)
             record2.createdAt = new Date()
             this.recordList.push(record2)
         }
         @Watch('recordList')
         onRecordListChange(){
-            model.save(this.recordList)
+            recordListModel.save(this.recordList)
         }
     }
 </script>
