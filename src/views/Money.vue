@@ -19,7 +19,6 @@
     import Note from '@/components/Money/Note.vue';
     import Tags from '@/components/Money/Tags.vue';
     import recordListModel from '@/models/recordListModel';
-    import tagListModel from '@/models/tagListModel';
     const recordList = recordListModel.fetch()
 
     @Component({
