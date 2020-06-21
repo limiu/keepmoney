@@ -27,6 +27,7 @@
     })
     export default class Money extends Vue {
         tags = tagList;
+        recordList: RecordItem[] = recordList
         record: RecordItem = {tags:[],notes:'',type:'-',amount:0}
         onUpdateTags(value: string[]) {
             this.record.tags = value
@@ -36,13 +37,11 @@
             this.record.notes = value
         }
         saveRecord(){
-            const record2: RecordItem = recordListModel.clone(this.record)
-            record2.createdAt = new Date()
-            this.recordList.push(record2)
+           recordListModel.create(this.record)
         }
         @Watch('recordList')
         onRecordListChange(){
-            recordListModel.save(this.recordList)
+            recordListModel.save()
         }
     }
 </script>
