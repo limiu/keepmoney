@@ -18,6 +18,7 @@
 <script lang="ts">
     import Vue from 'vue';
     import {Component, Prop} from 'vue-property-decorator';
+    import tagListModel from '@/models/tagListModel';
 
     @Component
     export default class Tags extends Vue {
@@ -33,12 +34,17 @@
             this.$emit('update:value',this.selectedTags)
         }
         create(){
-          const name =  window.prompt('请输入标签名')
-            if(name === ''){
-                window.alert('标签名不能为空')
-            }else if(this.dataSource){
-                    this.$emit('update:dataSource',[...this.dataSource,name])
-
+            {
+                const name = window.prompt('请输入标签名');
+                if(name){
+                    const message = tagListModel.create(name)
+                    tagListModel.create(name)
+                    if(message === 'duplicated'){
+                        window.alert('标签名重复了')
+                    }else if(message === 'success'){
+                        window.alert('创建成功')
+                    }
+                }
             }
         }
     }
