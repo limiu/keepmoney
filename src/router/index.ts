@@ -29,7 +29,7 @@ Vue.use(VueRouter)
       component:Statistics
     },
     {
-      path:'/label/edit',
+      path:'/label/edit/:id',
       component:EditLabel
 
     },
