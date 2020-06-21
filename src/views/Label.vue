@@ -1,11 +1,12 @@
 <template>
     <div>
         <Layout>
-            <ol class="tags">
-                <li v-for="tag in tags" :key="tag.id">
+            <div class="tags">
+                <router-link v-for="tag in tags" :key="tag.id" :to="`/label/edit/${tag.id}`" class="tag">
                     <span>{{tag.name}}</span>
-                    <van-icon name="arrow"></van-icon></li>
-            </ol>
+                    <van-icon name="arrow"></van-icon>
+                </router-link>
+            </div>
             <div class="button-wrapper">
                 <van-button class="create-tag" @click="createTag" round color="linear-gradient(to right, #4bb0ff, #6149f6)">新建标签</van-button>
             </div>
@@ -42,7 +43,8 @@
 <style lang="scss" scoped>
     .tags {
         font-size: 16px;
-        li{
+        .tag{
+            color: #2c3e50;
             background: white;
             min-height: 44px;
             display: flex;
