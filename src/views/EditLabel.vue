@@ -16,13 +16,14 @@
     import Vue from 'vue';
     import {Component} from 'vue-property-decorator';
     import Layout from '@/components/Layout.vue';
+    import store from '@/store/index2';
     @Component({
         components: {Layout}
     })
     export default class EditLabel extends Vue {
         tag?: Tag = undefined
         created(){
-                this.tag = window.findTag(this.$route.params.id)
+                this.tag = store.findTag(this.$route.params.id)
             if(!this.tag){
                 this.$router.replace('/404')
             }
@@ -30,12 +31,12 @@
         }
         updateTag(name: string){
             if(this.tag){
-                window.updateTag(this.tag.id,name)
+                store.updateTag(this.tag.id,name)
             }
         }
         removeTag(){
             if(this.tag){
-               if (window.removeTag(this.tag.id)){
+               if (store.removeTag(this.tag.id)){
                    this.$router.back()
                }else {
                    window.alert('删除失败')
