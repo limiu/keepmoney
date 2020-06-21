@@ -2,11 +2,12 @@
     <div class="tags">
         <van-tag round plain size="large" type="primary" class="van-tag"
                  v-for="tag in dataSource"
-                 :key="tag"
+                 :key="tag.id"
                  @click="toggle(tag)"
                  :class="{selected: selectedTags.indexOf(tag)>=0}"
+
         >
-            {{tag}}
+            {{tag.name}}
         </van-tag>
         <div>
             <button class="new-tag" @click="create">新增标签</button>
