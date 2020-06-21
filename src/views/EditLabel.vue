@@ -1,11 +1,13 @@
 <template>
     <Layout>
-        <van-nav-bar title="编辑标签" left-arrow left-text="返回">
+        <van-nav-bar title="编辑标签" left-arrow left-text="返回" @click-left="goBack">
         </van-nav-bar>
-        <van-field label="标签名" placeholder="请输入标签名" left-icon="smile-comment-o" :value="tag.name" >
+        <van-field label="标签名" placeholder="请输入标签名" left-icon="smile-comment-o" :value="tag.name" @input="updateTag">
         </van-field>
         <div class="button-wrapper">
-            <van-button class="remove-tag"  round color="linear-gradient(to right, #4bb0ff, #6149f6)">删除标签</van-button>
+            <van-button class="remove-tag" @click="removeTag" round color="linear-gradient(to right, #4bb0ff, #6149f6)">
+                删除标签
+            </van-button>
         </div>
     </Layout>
 </template>
@@ -30,6 +32,19 @@
             }else {
                 this.$router.replace('/404')
             }
+        }
+        updateTag(name: string){
+            if(this.tag){
+                tagListModel.update(this.tag.id,name)
+            }
+        }
+        removeTag(){
+            if(this.tag){
+                tagListModel.remove(this.tag.id)
+            }
+        }
+        goBack(){
+            this.$router.back()
         }
     }
 </script>
