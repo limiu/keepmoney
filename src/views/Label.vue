@@ -18,16 +18,17 @@
     import Vue from 'vue';
     import {Component} from 'vue-property-decorator';
     import Layout from '@/components/Layout.vue';
-    import store from '@/store/index2';
     @Component({
         components: {Layout}
     })
     export default class Label extends Vue {
-        tags = store.tagList;
+        tags = [] //TODO
+        // store.tagList;
         createTag(){
             const name = window.prompt('请输入标签名');
             if(name){
-               store.createTag(name)
+                //TODO
+              // store.createTag(name)
             }
         }
     }
