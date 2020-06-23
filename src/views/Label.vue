@@ -15,22 +15,23 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
     import {Component} from 'vue-property-decorator';
     import Layout from '@/components/Layout.vue';
+    import {mixins} from 'vue-class-component';
+    import TagHelper from '@/mixins/TagHelper';
     @Component({
-        components: {Layout}
-    })
-    export default class Label extends Vue {
-        tags = [] //TODO
-        // store.tagList;
-        createTag(){
-            const name = window.prompt('请输入标签名');
-            if(name){
-                //TODO
-              // store.createTag(name)
+        components: {Layout},
+        computed:{
+            tags(){
+               return  this.$store.state.tagList
             }
         }
+    })
+    export default class Label extends mixins(TagHelper) {
+        created(){
+            this.$store.commit('fetchTags')
+        }
+
     }
 </script>
 
