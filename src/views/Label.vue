@@ -1,6 +1,7 @@
 <template>
     <div>
         <Layout>
+            <van-nav-bar title="keep记账"></van-nav-bar>
             <div class="tags">
                 <router-link v-for="tag in tags" :key="tag.id" :to="`/label/edit/${tag.id}`" class="tag">
                     <span>{{tag.name}}</span>

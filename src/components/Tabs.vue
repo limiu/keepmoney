@@ -1,6 +1,6 @@
 <template>
-    <ul class="tabs">
-        <li v-for="item in dataSource" :key="item.value" :class="liClass(item)" @click="select(item)">{{item.text}}</li>
+    <ul class="tabs" :class="{[classPrefix + '-tabs']: classPrefix}">
+        <li class="tabs-item" v-for="item in dataSource" :key="item.value" :class="liClass(item)" @click="select(item)">{{item.text}}</li>
     </ul>
 </template>
 
@@ -14,7 +14,7 @@
         dataSource!: DataSourceItem[]
         @Prop(String) readonly value!: string;
         @Prop(String) classPrefix?: string
-        liClass(item: DataSourceItem){return {selected:item.value === this.value,[this.classPrefix + 'tabs-item']:this.classPrefix}}
+        liClass(item: DataSourceItem){return {selected:item.value === this.value,[this.classPrefix + '-tabs-item']:this.classPrefix}}
         select(item: DataSourceItem){
             this.$emit('update:value',item.value)
         }
@@ -28,7 +28,7 @@
         text-align: center;
         font-size: 24px;
         color: rgb(25, 137, 250);
-        li{
+        &-item{
             width: 50%;
             height: 64px;
             display: flex;

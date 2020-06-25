@@ -3,7 +3,7 @@
         <Layout>
             <div class="money-wrapper">
                 <NumberPad :value.sync="record.amount" @submit="saveRecord"></NumberPad>
-                <Type :value.sync="record.type"></Type>
+                <Tabs :data-source="recordTypeList" :value.sync="record.type"></Tabs>
                 <Note @update:value="onUpdateNotes"></Note>
                 <Tags></Tags>
             </div>
@@ -15,17 +15,19 @@
     import {Component} from 'vue-property-decorator';
     import Layout from '@/components/Layout.vue';
     import NumberPad from '@/components/Money/NumberPad.vue';
-    import Type from '@/components/Money/Type.vue';
     import Note from '@/components/Money/Note.vue';
     import Tags from '@/components/Money/Tags.vue';
+    import recordTypeList from '@/constants/recordTypeList';
+    import Tabs from '@/components/Tabs.vue';
 
     @Component({
-        components: {Tags, Note, Type, NumberPad, Layout},
+        components: {Tabs, Tags, Note, NumberPad, Layout},
     })
     export default class Money extends Vue {
         get recordList(){
             return this.$store.state.recordList
         }
+        recordTypeList = recordTypeList
         record: RecordItem = {tags:[],notes:'',type:'-',amount:0};
         created(){
             this.$store.commit('fetchRecords')
@@ -44,6 +46,6 @@
 .money-wrapper{
         display: flex;
         flex-direction: column-reverse;
-        height: 93.5vh;
+    height: 93vh;
     }
 </style>
