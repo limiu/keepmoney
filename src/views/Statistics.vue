@@ -2,10 +2,9 @@
         <Layout>
             <van-nav-bar title="keep记账"></van-nav-bar>
             <tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type"></tabs>
-            <tabs class-prefix="interval" :data-source="intervalList" :value.sync="interval"></tabs>
-                <ol>
-                    <li v-for="(group,index) in result" :key="index">
-                        <h3 class="title">{{group.title}}</h3>
+                <ol v-if="groupedList.length >0">
+                    <li v-for="(group,index) in groupedList" :key="index">
+                        <h3 class="title">{{beautify(group.title)}} <span>¥{{group.total}}</span></h3>
                         <ol>
                             <li v-for="item in group.items" :key="item.id" class="record">
                                   <span>{{tagString(item.tags)}}</span>
@@ -15,6 +14,9 @@
                         </ol>
                     </li>
                 </ol>
+            <div v-else class="no-result">
+               好好记账 慢慢成长
+            </div>
         </Layout>
 </template>
 
@@ -25,45 +27,71 @@
     import Tabs from '@/components/Tabs.vue';
     import intervalList from '@/constants/interval';
     import recordTypeList from '@/constants/recordTypeList';
+    import dayjs from 'dayjs';
+    import clone from '@/lib/clone';
+    const oneDay = 86400 * 1000
     @Component({
         components: {Tabs, Layout}
     })
     export default class Statistics extends Vue {
-        tagString(tags: Tag[]){
-            return tags.length === 0? '无' : tags.join(',')
+        tagString(tags: Tag[]) {
+            return tags.length === 0 ? '无' : tags.map(t=> t.name).join('，');
         }
-        get recordList(){
-            return (this.$store.state as RootState).recordList
-        }
-        get result(){
-            const {recordList} = this;
-            type HashTableValue = {title: string;items: RecordList[]}
-            const hashTable: {[key: string]: HashTableValue}= {}
-            for(let i = 0;i<this.recordList.length;i++){
-            const [date,time]  =  recordList[i].createdAt!.split('T')
-                console.log(date);
-                hashTable[date] = hashTable[date] || {title:date ,items:[]};
-                hashTable[date].items.push(recordList[i])
+        beautify(string: string) {
+            const day = dayjs(string);
+            const now = dayjs();
+            if (day.isSame(now, 'day')) {
+                return '今天';
+            } else if (day.isSame(now.subtract(1, 'day'), 'day')) {
+                console.log('hi');
+                return '昨天';
+            } else if (day.isSame(now.subtract(2, 'day'), 'day')) {
+                return '前天';
+            } else if (day.isSame(now, 'year')) {
+                return day.format('M月D日');
+            } else {
+                return day.format('YYYY年M月D日');
             }
-            console.log(hashTable);
-            return hashTable
         }
-        beforeCreate(){
-            this.$store.commit('fetchRecords')
+        get recordList() {
+            return (this.$store.state as RootState).recordList;
+        }
+        get groupedList() {
+            const {recordList} = this;
+            const newList = clone(recordList).filter(r => r.type === this.type).sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
+            if (newList.length === 0) {return [];}
+            type Result = { title: string; total?: number; items: RecordItem[] }[]
+            const result: Result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
+            for (let i = 1; i < newList.length; i++) {
+                const current = newList[i];
+                const last = result[result.length - 1];
+                if (dayjs(last.title).isSame(dayjs(current.createdAt), 'day')) {
+                    last.items.push(current);
+                } else {
+                    result.push({title: dayjs(current.createdAt).format('YYYY-MM-DD'), items: [current]});
+                }
+            }
+            result.map(group => {
+                group.total = group.items.reduce((sum, item) => {
+                    console.log(sum);
+                    console.log(item);
+                    return sum + item.amount;
+                }, 0);
+            });
+            return result;
+        }
+        beforeCreate() {
+            this.$store.commit('fetchRecords');
         }
         type = '-';
-        interval = 'day'
-        intervalList = intervalList
-        recordTypeList = recordTypeList
+        recordTypeList = recordTypeList;
     }
 </script>
 
 <style lang="scss" scoped>
     ::v-deep .type-tabs{
-        margin-bottom: 5px;
     }
     ::v-deep .interval-tabs-item {
-        margin-top: 10px;
         height: 40px;
         background-color: white;
         color:rgb(25, 137, 250);
@@ -96,6 +124,10 @@
         margin-right:auto ;
         margin-left: 16px;
         color: #999;
+    }
+    .no-result{
+        padding: 130px;
+        text-align: center;
     }
 
 </style>

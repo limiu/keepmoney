@@ -5,14 +5,14 @@
                 <NumberPad :value.sync="record.amount" @submit="saveRecord"></NumberPad>
                 <Tabs :data-source="recordTypeList" :value.sync="record.type"></Tabs>
                 <Note @update:value="onUpdateNotes"></Note>
-                <Tags></Tags>
+                <Tags @update:value="record.tags = $event"></Tags>
             </div>
         </Layout>
     </div>
 </template>
 <script lang="ts">
     import Vue from 'vue';
-    import {Component} from 'vue-property-decorator';
+    import {Component, Prop} from 'vue-property-decorator';
     import Layout from '@/components/Layout.vue';
     import NumberPad from '@/components/Money/NumberPad.vue';
     import Note from '@/components/Money/Note.vue';
@@ -24,6 +24,7 @@
         components: {Tabs, Tags, Note, NumberPad, Layout},
     })
     export default class Money extends Vue {
+        @Prop(Number) readonly value!: number
         get recordList(){
             return this.$store.state.recordList
         }
